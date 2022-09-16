@@ -1,3 +1,3 @@
-# mazey-nginx-conf
+# conf.d
 
 Nginx
