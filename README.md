@@ -10,7 +10,7 @@ cd /etc/nginx/conf.d && git pull && service nginx restart
 
 ## File Type
 
-Sum
+All
 
 ```
 gif;png;bmp;jpeg;jpg;html;htm;shtml;xml;json;mp3;wma;flv;mp4;wmv;ogg;avi;doc;docx;xls;xlsx;ppt;pptx;txt;pdf;zip;exe;tat;ico;css;js;swf;apk;m3u8;ts
