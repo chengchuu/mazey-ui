@@ -2,10 +2,20 @@
 
 Nginx
 
+## Config
+
+```
+cd /etc/nginx;
+
+git clone git@github.com:mazeyqian/mazey.net.nginx.conf.d.git;
+
+include /etc/nginx/mazey.net.nginx.conf.d/config/*.conf;
+```
+
 ## Update
 
 ```
-cd /etc/nginx/conf.d && git pull && service nginx restart
+cd /etc/nginx/mazey.net.nginx.conf.d && git pull && service nginx restart;
 ```
 
 ## File Type
