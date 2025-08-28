@@ -18,7 +18,7 @@ Use mazey-ui via [npm](https://www.npmjs.com/package/mazey-ui).
 npm install mazey-ui --save
 ```
 
-Of course, you can also download this file and serve it yourself. The file locates at the `lib/mazey-ui.min.js`.
+Of course, you can also download this file and serve it yourself. The file locates at the `dist/index.js`.
 
 ## Usage
 
