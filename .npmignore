@@ -6,7 +6,7 @@ doc/
 docs/
 undefined/
 temp/
-src/
+# src/
 examples/
 images/
 coverage/
