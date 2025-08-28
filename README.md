@@ -1,43 +1,70 @@
-# conf.d
+# mazey-ui
 
-Nginx
+[![npm version][npm-image]][npm-url]
+[![l][l-image]][l-url]
 
-## Config
+[npm-image]: https://img.shields.io/npm/v/mazey-ui
+[npm-url]: https://npmjs.org/package/mazey-ui
+[l-image]: https://img.shields.io/npm/l/mazey-ui
+[l-url]: https://github.com/chengchuu/mazey-ui
 
-```
-cd /etc/nginx;
+Frontend UI library.
 
-git clone git@github.com:mazeyqian/mazey.net.nginx.conf.d.git;
+## Install
 
-include /etc/nginx/mazey.net.nginx.conf.d/config/*.conf;
-```
+Use mazey-ui via [npm](https://www.npmjs.com/package/mazey-ui).
 
-## Update
-
-```
-cd /etc/nginx/mazey.net.nginx.conf.d && git pull && service nginx restart;
-```
-
-## File Type
-
-All
-
-```
-gif;png;bmp;jpeg;jpg;html;htm;shtml;xml;json;mp3;wma;flv;mp4;wmv;ogg;avi;doc;docx;xls;xlsx;ppt;pptx;txt;pdf;zip;exe;tat;ico;css;js;swf;apk;m3u8;ts
+```bash
+npm install mazey-ui --save
 ```
 
-Image
+Of course, you can also download this file and serve it yourself. The file locates at the `lib/mazey-ui.min.js`.
 
+## Usage
+
+//TODO
+
+## Contributing
+
+### Development Environment
+
+| Dependency | Version  |
+|------------|----------|
+| Node.js    | v16.19.0 |
+| TypeScript | v5.1.6   |
+
+### Scripts
+
+Install Dependencies:
+
+```bash
+npm i
 ```
-png|jpeg|jpg|gif|ico|webp|mp3|mp4|webm|wma|bmp|swf|flv|wmv|avi|apk|m3u8|doc|docx|xls|xlsx|ppt|pptx|txt|pdf|zip|exe
+
+Development:
+
+```bash
+npm run dev
 ```
 
-Web
+Build:
 
+```bash
+npm run build
 ```
-html|css|js|json|htm|shtml|xml|ts
+
+Test:
+
+```bash
+npm run test
 ```
 
-## Refer
+Document:
 
-https://nginx.org/en/docs/example.html
+```bash
+npm run docs
+```
+
+## License
+
+This software is released under the terms of the [MIT license](https://github.com/chengchuu/mazey-ui/blob/main/LICENSE).
