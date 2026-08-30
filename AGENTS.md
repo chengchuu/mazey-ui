@@ -556,9 +556,7 @@ Keep dependencies minimal.
 
 Do not install packages merely because they may be useful later.
 
-React and React DOM should be treated as peer dependencies for the published library.
-
-They may also be development dependencies for local development, testing, and building.
+React and React DOM are runtime dependencies of the published library. Keep Rollup's React externals so consumers and the package share the installed React instance rather than embedding another copy in each bundle.
 
 The website build uses:
 

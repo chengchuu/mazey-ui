@@ -14,7 +14,11 @@ describe("project delivery configuration", () => {
     expect(pkg.module).toBe("./dist/index.js");
     expect(pkg.exports["./styles.css"]).toBe("./dist/styles.css");
     expect(pkg.files).toEqual([ "dist", "LICENSE", "README.md" ]);
-    expect("dependencies" in pkg).toBe(false);
+    expect(pkg.dependencies).toEqual({
+      react: "^19.0.0",
+      "react-dom": "^19.0.0",
+    });
+    expect("peerDependencies" in pkg).toBe(false);
     expect(projectConfigSource).toContain("const basePath = siteUrl.pathname.endsWith(\"/\")");
     expect(projectConfigSource).toContain("https://www.npmjs.com/package/mazey-ui");
   });

@@ -8,10 +8,8 @@
 
 ## Install
 
-Install the package and its React peer dependencies:
-
 ```bash
-npm install mazey-ui react react-dom
+npm install mazey-ui
 ```
 
 ## Use ThemeToggle
