@@ -28,12 +28,6 @@ ThemeToggle
 
 The project should grow incrementally. Add new components only when a real product or application requirement exists.
 
-For the complete project goals and fixed architectural decisions, read:
-
-```text
-GOAL.md
-```
-
 ---
 
 # Working Principles
@@ -74,16 +68,15 @@ Create shared abstractions only after multiple real components demonstrate the s
 
 Before editing:
 
-1. Read `GOAL.md`.
-2. Read this `AGENTS.md`.
-3. Inspect the files relevant to the task.
-4. Inspect the current Git state.
-5. Preserve unrelated work.
-6. Identify the public API affected by the change.
-7. Avoid unnecessary dependencies.
-8. Avoid unnecessary abstractions.
-9. Keep accessibility part of the implementation contract.
-10. Keep consumer-owned application state outside ordinary reusable components.
+1. Read this `AGENTS.md`.
+2. Inspect the files relevant to the task.
+3. Inspect the current Git state.
+4. Preserve unrelated work.
+5. Identify the public API affected by the change.
+6. Avoid unnecessary dependencies.
+7. Avoid unnecessary abstractions.
+8. Keep accessibility part of the implementation contract.
+9. Keep consumer-owned application state outside ordinary reusable components.
 
 Useful Git commands:
 
@@ -942,7 +935,6 @@ mazey-ui/
 ├─ package.json
 ├─ README.md
 ├─ AGENTS.md
-├─ GOAL.md
 └─ LICENSE
 ```
 
