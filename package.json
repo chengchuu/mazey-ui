@@ -1,0 +1,79 @@
+{
+  "name": "mazey-ui",
+  "version": "0.1.0",
+  "description": "Small, accessible React UI components.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "vite build",
+    "prepack": "npm run lint && npm run test && npm run typecheck && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chengchuu/mazey-ui.git"
+  },
+  "keywords": [
+    "react",
+    "ui",
+    "typescript",
+    "components",
+    "accessible"
+  ],
+  "author": {
+    "name": "Cheng",
+    "email": "mazeyqian@gmail.com",
+    "url": "https://github.com/chengchuu"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chengchuu/mazey-ui/issues"
+  },
+  "homepage": "https://github.com/chengchuu/mazey-ui#readme",
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "dependencies": {
+    "mazey": "^5.9.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.6",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "bootstrap-icons": "^1.13.1",
+    "eslint": "^9.39.5",
+    "jsdom": "^30.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.68.0",
+    "vite": "^8.2.2",
+    "vite-plugin-dts": "^5.0.3",
+    "vitest": "^4.1.11"
+  }
+}
