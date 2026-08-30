@@ -560,13 +560,13 @@ React and React DOM should be treated as peer dependencies for the published lib
 
 They may also be development dependencies for local development, testing, and building.
 
-The project uses:
+The website build uses:
 
 ```text
 mazey
 ```
 
-as an intended dependency.
+as a development-only dependency. Package runtime components do not import it.
 
 Use:
 
@@ -575,6 +575,8 @@ bootstrap-icons
 ```
 
 only when icons are actually needed.
+
+Bootstrap, Webpack, and TypeDoc are website or documentation build dependencies. Keep them outside the published runtime bundle and package allowlist.
 
 Do not introduce another icon library without an explicit requirement.
 
@@ -914,12 +916,17 @@ Keep the initial package API small.
 
 # Repository Structure
 
-Keep the initial repository structure minimal.
+Keep package, website, API documentation, and assembled Pages output in separate ownership boundaries.
 
 A reasonable structure is:
 
 ```text
 mazey-ui/
+├─ .github/workflows/
+├─ examples/                 # React playground source
+├─ images/                   # Maintained website and PWA assets
+├─ scripts/                  # Rollup, Webpack, Pages, and validators
+├─ site/                     # Home, shared theme/PWA, and API enhancements
 ├─ src/
 │  ├─ components/
 │  │  └─ ThemeToggle/
@@ -930,6 +937,7 @@ mazey-ui/
 │  │
 │  └─ index.ts
 │
+├─ project.config.js         # Build-only package and website metadata
 ├─ eslint.config.js
 ├─ tsconfig.json
 ├─ package.json
@@ -938,7 +946,7 @@ mazey-ui/
 └─ LICENSE
 ```
 
-Do not create empty directories for possible future architecture.
+Rollup owns `dist/`, Webpack owns `dist-dev/`, TypeDoc owns `dist-api/`, and the Pages assembler owns `docs/`. Do not create empty directories for possible future architecture.
 
 Do not create placeholder components.
 
@@ -979,7 +987,6 @@ automatic document theme mutation
 post-initialization OS theme tracking
 CSS-in-JS framework
 second icon library
-Bootstrap CSS dependency
 routing
 backend
 API client
@@ -1022,7 +1029,10 @@ Expected categories include:
 ```bash
 npm run lint
 npm run test
-npm run build
+npm run typecheck
+npm run build:package
+npm run docs
+npm run preview
 npm pack
 ```
 

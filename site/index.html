@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-theme="light" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= ROOT_TITLE %></title>
+    <meta name="description" content="<%= ROOT_DESCRIPTION %>">
+    <link rel="canonical" href="<%= SITE_URL %>">
+    <link rel="icon" href="<%= FAVICON_URL %>" type="image/png">
+    <% if (MANIFEST_URL) { %><link rel="manifest" href="<%= MANIFEST_URL %>"><% } %>
+    <meta name="theme-color" content="<%= THEME_COLOR_LIGHT %>" data-theme-color>
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= DISPLAY_NAME %>">
+    <meta property="og:title" content="<%= ROOT_TITLE %>">
+    <meta property="og:description" content="<%= ROOT_DESCRIPTION %>">
+    <meta property="og:url" content="<%= SITE_URL %>">
+    <meta property="og:image" content="<%= OPEN_GRAPH_IMAGE_URL %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Mazey UI logo and component artwork.">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json"><%= ROOT_JSON_LD %></script>
+    <script src="<%= BASE_PATH %>assets/theme.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <nav class="site-nav container" aria-label="Primary navigation">
+        <a class="site-brand" href="<%= BASE_PATH %>"><img src="<%= LOGO_URL %>" alt="" width="32" height="32"><span><%= DISPLAY_NAME %></span></a>
+        <button class="btn btn-outline-secondary nav-toggle" type="button" data-nav-toggle aria-controls="site-menu" aria-expanded="false">Menu</button>
+        <ul class="site-menu" id="site-menu" data-nav-menu hidden>
+          <li><a href="<%= BASE_PATH %>">Home</a></li>
+          <li><a href="<%= BASE_PATH %>playground/">Playground</a></li>
+          <li><a href="#install">Install</a></li>
+          <li><a href="#usage">Usage</a></li>
+          <li><a href="<%= BASE_PATH %>api/">API</a></li>
+          <li><a href="<%= GITHUB_URL %>">GitHub</a></li>
+          <li><a href="<%= NPM_URL %>">npm</a></li>
+          <li>
+            <button class="theme-toggle" type="button" data-theme-toggle aria-label="Current theme: Light. Switch to dark theme.">
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false" data-theme-icon="light"><path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/></svg>
+              <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true" focusable="false" data-theme-icon="dark" hidden><path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278"/><path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/></svg>
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section class="hero container">
+        <p class="text-uppercase fw-semibold text-primary">React UI library</p>
+        <h1>Accessible UI controls with an explicit theme contract.</h1>
+        <p>Mazey UI provides small, strongly typed React components. The first component is a controlled light and dark theme toggle.</p>
+        <a class="btn btn-primary" href="<%= BASE_PATH %>playground/">Open playground</a>
+      </section>
+      <section class="section container" id="install">
+        <h2>Install</h2>
+        <pre><code><%= INSTALL_COMMAND %></code></pre>
+      </section>
+      <section class="section container" id="usage">
+        <h2>Usage</h2>
+        <pre><code>import { ThemeToggle } from "mazey-ui";
+import "mazey-ui/styles.css";
+
+&lt;ThemeToggle theme={theme} onThemeChange={setTheme} /&gt;</code></pre>
+        <p><a href="<%= BASE_PATH %>api/">Read the complete TypeScript API documentation.</a></p>
+      </section>
+      <section class="section container" aria-labelledby="pwa-heading">
+        <h2 id="pwa-heading">Install this website</h2>
+        <p>Install controls appear when your browser makes the site installable.</p>
+        <button class="btn btn-outline-primary" type="button" data-pwa-install hidden>Install app</button>
+        <span class="ms-2" role="status" aria-live="polite" data-pwa-status>Installation is unavailable in this browser or context.</span>
+      </section>
+    </main>
+    <footer class="site-footer"><div class="container">Mazey UI is released under the <a href="<%= LICENSE_URL %>">MIT License</a>.</div></footer>
+    <aside class="pwa-update" aria-label="Website update" data-pwa-update hidden><span>A new website version is available.</span><button class="btn btn-sm btn-primary" type="button" data-pwa-update-now>Update now</button></aside>
+    <noscript>Mazey UI documentation remains readable, but interactive theme and PWA controls require JavaScript.</noscript>
+  </body>
+</html>

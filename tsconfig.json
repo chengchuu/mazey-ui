@@ -11,11 +11,14 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
+    "paths": {
+      "mazey-ui": [ "./src/index.ts" ]
+    },
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": [ "node", "vite/client", "vitest/globals", "@testing-library/jest-dom" ]
+    "types": [ "node", "vitest/globals", "@testing-library/jest-dom" ]
   },
-  "include": [ "src", "vite.config.ts" ]
+  "include": [ "src", "site", "examples", "scripts/**/*.ts" ]
 }

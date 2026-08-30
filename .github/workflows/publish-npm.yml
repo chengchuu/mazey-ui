@@ -1,0 +1,63 @@
+name: Validate and publish npm package
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "release/v*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - run: npm install
+      - run: npm run preview
+
+  publish:
+    needs: validate
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/v')
+    runs-on: ubuntu-latest
+    environment: npm
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          package-manager-cache: false
+          registry-url: "https://registry.npmjs.org/"
+      - run: npm install
+      - name: Read package identity
+        id: package
+        run: echo "spec=$(node -p \"const p=require('./package.json'); p.name+'@'+p.version\")" >> "$GITHUB_OUTPUT"
+      - name: Require an unpublished package version
+        run: |
+          set +e
+          output=$(npm view "${{ steps.package.outputs.spec }}" version --registry=https://registry.npmjs.org/ 2>&1)
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "${{ steps.package.outputs.spec }} is already published."
+            exit 1
+          fi
+          if ! echo "$output" | grep -q "E404"; then
+            echo "$output"
+            exit "$status"
+          fi
+      - run: npm run build:package
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

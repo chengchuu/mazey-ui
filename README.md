@@ -2,6 +2,10 @@
 
 `mazey-ui` is a small React 19 component library. Its initial public API contains the controlled, accessible `ThemeToggle` component.
 
+- [Website](https://chengchuu.github.io/mazey-ui/)
+- [Playground](https://chengchuu.github.io/mazey-ui/playground/)
+- [API documentation](https://chengchuu.github.io/mazey-ui/api/)
+
 ## Install
 
 Install the package and its React peer dependencies:
@@ -86,9 +90,13 @@ pnpm install
 npm run lint
 npm run test
 npm run typecheck
-npm run build
+npm run build:package
+npm run docs
+npm run preview
 npm pack
 ```
+
+The package build produces ESM, CommonJS, declarations, CSS, source maps, and the `MAZEY_UI` browser IIFE. Webpack owns the Home and playground builds, TypeDoc owns API generation, and the Pages assembly script creates the final `docs/` artifact under `/mazey-ui/`.
 
 ## License
 

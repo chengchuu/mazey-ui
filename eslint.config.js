@@ -3,7 +3,7 @@ import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   {
-    ignores: [ "coverage", "dist" ],
+    ignores: [ "coverage", "dist", "dist-api", "dist-dev", "docs" ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -27,6 +27,29 @@ export default tseslint.config(
           },
         },
       ],
+    },
+  },
+  {
+    files: [ "project.config.js", "scripts/**/*.{js,mjs}", "vitest.config.ts" ],
+    languageOptions: {
+      globals: {
+        console: "readonly",
+        process: "readonly",
+        URL: "readonly",
+      },
+    },
+  },
+  {
+    files: [ "site/service-worker.js" ],
+    languageOptions: {
+      globals: {
+        caches: "readonly",
+        __APP_SHELL__: "readonly",
+        fetch: "readonly",
+        Response: "readonly",
+        self: "readonly",
+        URL: "readonly",
+      },
     },
   },
 );
