@@ -38,6 +38,9 @@ describe("project delivery configuration", () => {
     expect(pages).toContain("actions/deploy-pages@v5");
     expect(publish).toContain("github.event_name == 'push'");
     expect(publish).toContain("refs/heads/release/v");
+    expect(publish).toContain("node --input-type=commonjs -p");
+    expect(publish).toContain(">> \"$GITHUB_OUTPUT\"");
+    expect(publish).not.toContain("$(node -p");
     expect((publish.match(/NPM_TOKEN/g) || [])).toHaveLength(1);
   });
 
