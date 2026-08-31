@@ -41,7 +41,7 @@ jobs:
       - run: npm install
       - name: Read package identity
         id: package
-        run: echo "spec=$(node -p \"const p=require('./package.json'); p.name+'@'+p.version\")" >> "$GITHUB_OUTPUT"
+        run: node --input-type=commonjs -p '"spec=" + require("./package.json").name + "@" + require("./package.json").version' >> "$GITHUB_OUTPUT"
       - name: Require an unpublished package version
         run: |
           set +e
