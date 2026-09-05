@@ -48,7 +48,7 @@
       <section class="hero container">
         <p class="text-uppercase fw-semibold text-primary">React UI library</p>
         <h1>Accessible UI controls with an explicit theme contract.</h1>
-        <p>Mazey UI provides small, strongly typed React components. The first component is a controlled light and dark theme toggle.</p>
+        <p>Mazey UI provides small, strongly typed React components. ThemeToggle supports controlled light and dark themes with an optional, read-only initial OS fallback.</p>
         <a class="btn btn-primary" href="<%= BASE_PATH %>playground/">Open playground</a>
       </section>
       <section class="section container" id="install">
@@ -57,10 +57,26 @@
       </section>
       <section class="section container" id="usage">
         <h2>Usage</h2>
-        <pre><code>import { ThemeToggle } from "mazey-ui";
+        <h3>Controlled theme</h3>
+        <pre><code>import { useState } from "react";
+import { ThemeToggle, type ThemeToggleTheme } from "mazey-ui";
 import "mazey-ui/styles.css";
 
-&lt;ThemeToggle theme={theme} onThemeChange={setTheme} /&gt;</code></pre>
+export function ControlledToggle() {
+  const [ theme, setTheme ] = useState&lt;ThemeToggleTheme&gt;("light");
+  return &lt;ThemeToggle theme={theme} onThemeChange={setTheme} /&gt;;
+}</code></pre>
+        <h3>OS fallback</h3>
+        <pre><code>import { useState } from "react";
+import { ThemeToggle, type ThemeToggleTheme } from "mazey-ui";
+import "mazey-ui/styles.css";
+
+export function OSFallbackToggle() {
+  const [ theme, setTheme ] = useState&lt;ThemeToggleTheme&gt;();
+  return &lt;ThemeToggle theme={theme} onThemeChange={setTheme} /&gt;;
+}</code></pre>
+        <p>Without an initial theme, the component reads the OS preference once and uses Light when unavailable. Feed the required onThemeChange callback value back through theme to update the control. Otherwise, repeated clicks request the same opposite value without changing the fallback.</p>
+        <p>The fallback does not track OS changes, access URL parameters or storage, or change the page theme. Persistence belongs to the consumer. Provide an explicit theme for server rendering and hydration.</p>
         <p><a href="<%= BASE_PATH %>api/">Read the complete TypeScript API documentation.</a></p>
       </section>
       <section class="section container" aria-labelledby="pwa-heading">

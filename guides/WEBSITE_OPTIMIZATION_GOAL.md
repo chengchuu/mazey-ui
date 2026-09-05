@@ -34,12 +34,12 @@ change:
   `dist/index.cjs`, `dist/index.d.ts`, and `dist/styles.css`.
 - Add source maps and a browser IIFE bundle at `dist/mazey-ui.min.js` with the browser global
   `MAZEY_UI`.
-- Keep React, ReactDOM, and the React JSX runtime external in ESM and CommonJS outputs. Keep React
+- Keep Mazey, React, ReactDOM, and the React JSX runtime external in ESM and CommonJS outputs. Externalize Mazey in declarations and declare it as a runtime dependency at `^5.9.1`. Bundle the used Mazey OS reader into the IIFE without requiring a Mazey global. Keep React
   peers external in the IIFE and bundle only the production JSX runtime needed by that output.
 - Add `unpkg` and `jsdelivr` package metadata that points to the validated browser bundle.
 - Generate CSS through the owning build stage instead of maintaining duplicate output by hand.
 - Validate declarations, ESM, CommonJS, IIFE, CSS, source maps, exports, and packed contents.
-- Keep all website, documentation, theme, SEO, and PWA code outside the package runtime and the
+- Keep all website, documentation, application-wide theme, SEO, and PWA code outside the package runtime and the
   published package allowlist.
 - Remove obsolete Vite package-build configuration and dependencies only after Rollup provides
   equivalent validated outputs. Retain Vitest and ESLint unless a verified incompatibility
@@ -74,6 +74,12 @@ owned artifacts through their scripts.
 Keep the package component and website on the concrete `"light" | "dark"` contract documented in
 `AGENTS.md`. Do not expose `system`, `auto`, or another third theme state in application state or
 website controls.
+
+`ThemeToggle` may initialize a read-only OS fallback through Mazey's `getSystemTheme()` when
+`theme` is omitted, using Light for `null`. A provided theme skips detection. The component
+does not refresh this fallback, read URL parameters or storage, persist a theme, add listeners,
+or mutate the document. Keep `onThemeChange` required and feed its value back through `theme`
+to update the control. SSR and hydration consumers must provide `theme`.
 
 Directly reuse these verified `mazey` APIs in the website layer:
 

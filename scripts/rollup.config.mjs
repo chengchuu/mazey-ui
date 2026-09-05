@@ -16,7 +16,7 @@ const input = resolveRoot("src/index.ts");
 const packageVersion = process.env.PACKAGE_VERSION || pkg.version;
 const banner = `/*! ${pkg.name} v${packageVersion} | ${pkg.license} License */`;
 const reactExternals = [ "react", "react-dom" ];
-const moduleExternals = (id) => id === "react" || id.startsWith("react/") || id === "react-dom" || id.startsWith("react-dom/");
+const moduleExternals = (id) => id === "mazey" || id === "react" || id.startsWith("react/") || id === "react-dom" || id.startsWith("react-dom/");
 
 function cleanDist() {
   return {

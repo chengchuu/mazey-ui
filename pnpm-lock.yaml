@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      mazey:
+        specifier: ^5.9.1
+        version: 5.9.1
       react:
         specifier: ^19.0.0
         version: 19.2.8
@@ -72,9 +75,6 @@ importers:
       jsdom:
         specifier: ^30.0.1
         version: 30.0.1
-      mazey:
-        specifier: ^5.9.1
-        version: 5.9.1
       mini-css-extract-plugin:
         specifier: ^2.10.2
         version: 2.10.2(webpack@5.110.1)

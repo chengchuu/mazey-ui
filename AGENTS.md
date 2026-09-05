@@ -203,7 +203,7 @@ default
 
 theme state unless explicitly requested.
 
-A reusable component should consume concrete theme state.
+A reusable component should render concrete theme state. `ThemeToggle` may initialize a read-only OS fallback when `theme` is omitted.
 
 The consuming application owns application-wide theme resolution and persistence.
 
@@ -219,7 +219,6 @@ The consuming application owns:
 localStorage
 theme storage keys
 URL preference parsing
-OS theme detection
 document.documentElement
 data-theme
 data-bs-theme
@@ -236,7 +235,13 @@ If reusable theme utilities are added later, they must be intentional public API
 
 # ThemeToggle
 
-`ThemeToggle` is a controlled component.
+`ThemeToggle` preserves controlled behavior and supports an optional, initialization-only OS fallback.
+
+Keep `ThemeToggleProps` as an interface with optional `theme` and required `onThemeChange`. Alias `ThemeToggleTheme` to Mazey's `ResolvedTheme`.
+
+Initialize a stable fallback lazily with `theme ?? getSystemTheme() ?? "light"`, importing `getSystemTheme` directly from Mazey. Render from `theme ?? initialResolvedTheme`. A provided theme skips OS detection. Do not refresh the fallback on rerenders, clicks, or later OS changes.
+
+The callback requests the opposite rendered theme but does not update the fallback. The consumer must feed the callback value back through `theme` to change the icon and accessible label. No storage key is needed. For SSR or hydration, consumers must provide `theme`; the fallback is for client-rendered use.
 
 Conceptual API:
 
@@ -275,7 +280,8 @@ Do not:
 read localStorage
 write localStorage
 resolve the theme again
-query the OS theme
+query the OS theme outside the lazy initializer
+add media-query listeners
 mutate document.documentElement
 set data-theme
 set data-bs-theme
@@ -284,7 +290,7 @@ update browser theme-color metadata
 
 inside the controlled component.
 
-The `theme` prop is the rendering source of truth.
+The `theme` prop takes precedence over the stable initial fallback. Do not add browser guards or suppress hydration warnings in the component.
 
 ---
 
@@ -558,13 +564,15 @@ Do not install packages merely because they may be useful later.
 
 React and React DOM are runtime dependencies of the published library. Keep Rollup's React externals so consumers and the package share the installed React instance rather than embedding another copy in each bundle.
 
-The website build uses:
+The component and website use:
 
 ```text
 mazey
 ```
 
-as a development-only dependency. Package runtime components do not import it.
+as a runtime dependency at `^5.9.1`. The package component uses only `getSystemTheme` for its read-only initial fallback. URL/storage preference resolution, persistence, and document updates remain application-owned.
+
+Externalize Mazey alongside React in ESM, CommonJS, and declaration outputs. Bundle the used OS reader into the `MAZEY_UI` IIFE without a separate Mazey global; keep React and ReactDOM external.
 
 Use:
 

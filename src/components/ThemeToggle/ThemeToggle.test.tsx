@@ -3,13 +3,28 @@ import { resolve } from "node:path";
 import { createElement, useState } from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { getSystemTheme } from "mazey";
 import {
+  afterEach,
+  beforeEach,
   describe,
   expect,
   it,
   vi,
 } from "vitest";
 import { ThemeToggle } from "./ThemeToggle";
+import type { ThemeToggleTheme } from "./ThemeToggle";
+
+vi.mock("mazey", { spy: true });
+
+beforeEach(() => {
+  vi.mocked(getSystemTheme).mockReset().mockReturnValue(null);
+});
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
 
 const themeToggleCss = readFileSync(
   resolve(process.cwd(), "src/components/ThemeToggle/ThemeToggle.css"),
@@ -56,6 +71,7 @@ describe("ThemeToggle", () => {
     expect(icon).toHaveAttribute("aria-hidden", "true");
     expect(icon).toHaveAttribute("focusable", "false");
     expect(icon?.querySelector("path")).toHaveAttribute("d", sunPath);
+    expect(getSystemTheme).not.toHaveBeenCalled();
   });
 
   it("renders the dark theme with the official moon-stars-fill paths", () => {
@@ -68,6 +84,7 @@ describe("ThemeToggle", () => {
 
     expect(button.querySelector("svg")).toHaveAttribute("data-icon", "moon-stars-fill");
     expect(paths.map((path) => path.getAttribute("d"))).toEqual(moonPaths);
+    expect(getSystemTheme).not.toHaveBeenCalled();
   });
 
   it("does not forward aria-pressed from an untyped consumer", () => {
@@ -140,6 +157,7 @@ describe("ThemeToggle", () => {
     expect(buttonRef).toBe(button);
     expect(onClick).toHaveBeenCalledOnce();
     expect(onThemeChange).toHaveBeenCalledWith("dark");
+    expect(onClick.mock.invocationCallOrder[0]).toBeLessThan(onThemeChange.mock.invocationCallOrder[0]);
   });
 
   it("does not request a theme change when disabled", async () => {
@@ -150,6 +168,107 @@ describe("ThemeToggle", () => {
     await user.click(screen.getByRole("button"));
 
     expect(onThemeChange).not.toHaveBeenCalled();
+  });
+
+  it.each([ "light", "dark", null ] as const)("initializes from the OS result %s", (systemTheme) => {
+    vi.mocked(getSystemTheme).mockReturnValue(systemTheme);
+    render(<ThemeToggle onThemeChange={vi.fn()} />);
+
+    const theme = systemTheme ?? "light";
+    const button = screen.getByRole("button");
+    expect(button).toHaveAttribute("data-mazey-ui-theme", theme);
+    expect(button).toHaveAccessibleName(theme === "light"
+      ? "Current theme: Light. Switch to dark theme."
+      : "Current theme: Dark. Switch to light theme.");
+    expect(button.querySelector("svg")).toHaveAttribute("data-icon", theme === "light" ? "sun-fill" : "moon-stars-fill");
+    expect(getSystemTheme).toHaveBeenCalledOnce();
+  });
+
+  it("keeps the initial fallback through rerenders, clicks, OS changes, and controlled updates", async () => {
+    const user = userEvent.setup();
+    vi.mocked(getSystemTheme).mockReturnValue("dark");
+    const onThemeChange = vi.fn();
+    const { rerender } = render(<ThemeToggle onThemeChange={onThemeChange} />);
+    const button = screen.getByRole("button");
+
+    vi.mocked(getSystemTheme).mockReturnValue("light");
+    rerender(<ThemeToggle onThemeChange={onThemeChange} title="Rerendered" />);
+    await user.click(button);
+    await user.click(button);
+    expect(onThemeChange.mock.calls).toEqual([ [ "light" ], [ "light" ] ]);
+    expect(button).toHaveAccessibleName("Current theme: Dark. Switch to light theme.");
+    expect(button).toHaveAttribute("data-mazey-ui-theme", "dark");
+
+    rerender(<ThemeToggle theme="light" onThemeChange={onThemeChange} />);
+    expect(button).toHaveAccessibleName("Current theme: Light. Switch to dark theme.");
+    rerender(<ThemeToggle onThemeChange={onThemeChange} />);
+    expect(button).toHaveAttribute("data-mazey-ui-theme", "dark");
+    expect(getSystemTheme).toHaveBeenCalledOnce();
+  });
+
+  it("feeds fallback requests back through the optional theme prop", async () => {
+    const user = userEvent.setup();
+    vi.mocked(getSystemTheme).mockReturnValue("dark");
+    const changes = vi.fn();
+    function FallbackToggle() {
+      const [ theme, setTheme ] = useState<ThemeToggleTheme>();
+      return <ThemeToggle theme={theme} onThemeChange={(nextTheme) => {
+        changes(nextTheme);
+        setTheme(nextTheme);
+      }} />;
+    }
+    render(<FallbackToggle />);
+    const button = screen.getByRole("button");
+    await user.click(button);
+    expect(button).toHaveAccessibleName("Current theme: Light. Switch to dark theme.");
+    expect(button).toHaveAttribute("data-mazey-ui-theme", "light");
+    expect(button.querySelector("svg")).toHaveAttribute("data-icon", "sun-fill");
+    await user.click(button);
+    expect(button).toHaveAccessibleName("Current theme: Dark. Switch to light theme.");
+    expect(button).toHaveAttribute("data-mazey-ui-theme", "dark");
+    expect(button.querySelector("svg")).toHaveAttribute("data-icon", "moon-stars-fill");
+    expect(changes.mock.calls).toEqual([ [ "light" ], [ "dark" ] ]);
+    expect(getSystemTheme).toHaveBeenCalledOnce();
+  });
+
+  it("uses the real OS reader without URL, storage, listeners, or document theme effects", async () => {
+    const actual = await vi.importActual<typeof import("mazey")>("mazey");
+    vi.mocked(getSystemTheme).mockImplementation(actual.getSystemTheme);
+    const user = userEvent.setup();
+    const media = { matches: true, addEventListener: vi.fn(), addListener: vi.fn() };
+    const matchMedia = vi.fn(() => media);
+    vi.stubGlobal("matchMedia", matchMedia);
+    const localStorageRead = vi.spyOn(window, "localStorage", "get");
+    const sessionStorageRead = vi.spyOn(window, "sessionStorage", "get");
+    const storageRead = vi.spyOn(Storage.prototype, "getItem");
+    const storageWrite = vi.spyOn(Storage.prototype, "setItem");
+    const queryRead = vi.spyOn(URLSearchParams.prototype, "get");
+    const locationRead = vi.spyOn(window, "location", "get");
+    const rootAttributes = document.documentElement.outerHTML.split(">")[0];
+    const head = document.head.innerHTML;
+    const onThemeChange = vi.fn();
+    const { rerender } = render(<ThemeToggle onThemeChange={onThemeChange} />);
+    const button = screen.getByRole("button");
+    media.matches = false;
+    rerender(<ThemeToggle onThemeChange={onThemeChange} />);
+    await user.click(button);
+
+    expect(onThemeChange).toHaveBeenCalledWith("light");
+    expect(button).toHaveAttribute("data-mazey-ui-theme", "dark");
+    expect(matchMedia).toHaveBeenCalledExactlyOnceWith("(prefers-color-scheme: dark)");
+    for (const spy of [ localStorageRead, sessionStorageRead, storageRead, storageWrite, queryRead, locationRead, media.addEventListener, media.addListener ]) {
+      expect(spy).not.toHaveBeenCalled();
+    }
+    expect(document.documentElement.outerHTML.split(">")[0]).toBe(rootAttributes);
+    expect(document.head.innerHTML).toBe(head);
+  });
+
+  it("retains the initial controlled value when theme is later omitted", () => {
+    const onThemeChange = vi.fn();
+    const { rerender } = render(<ThemeToggle theme="dark" onThemeChange={onThemeChange} />);
+    rerender(<ThemeToggle onThemeChange={onThemeChange} />);
+    expect(screen.getByRole("button")).toHaveAttribute("data-mazey-ui-theme", "dark");
+    expect(getSystemTheme).not.toHaveBeenCalled();
   });
 
   it("ships the required stable sizing and interaction styles", () => {
