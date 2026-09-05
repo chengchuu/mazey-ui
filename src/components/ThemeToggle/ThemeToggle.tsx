@@ -1,16 +1,21 @@
+import { useState } from "react";
+import { getSystemTheme } from "mazey";
+import type { ResolvedTheme } from "mazey";
 import type {
   ComponentPropsWithRef,
   MouseEvent,
 } from "react";
 import "./ThemeToggle.css";
 
-export type ThemeToggleTheme = "light" | "dark";
+export type ThemeToggleTheme = ResolvedTheme;
 
 export interface ThemeToggleProps extends Omit<
   ComponentPropsWithRef<"button">,
   "aria-label" | "aria-pressed" | "children" | "type"
 > {
-  theme: ThemeToggleTheme;
+  /** Render this theme, or use the initial OS preference when omitted. Provide it for SSR and hydration. */
+  theme?: ThemeToggleTheme;
+  /** Request the opposite theme. Pass it back through theme to update the control. */
   onThemeChange: (theme: ThemeToggleTheme) => void;
 }
 
@@ -37,8 +42,10 @@ export function ThemeToggle({
   ref,
   ...buttonProps
 }: ThemeToggleProps) {
-  const nextTheme = theme === "light" ? "dark" : "light";
-  const iconName = theme === "light" ? "sun-fill" : "moon-stars-fill";
+  const [ initialResolvedTheme ] = useState(() => theme ?? getSystemTheme() ?? "light");
+  const resolvedTheme = theme ?? initialResolvedTheme;
+  const nextTheme = resolvedTheme === "light" ? "dark" : "light";
+  const iconName = resolvedTheme === "light" ? "sun-fill" : "moon-stars-fill";
   const classes = [ "mazey-ui-theme-toggle", className ].filter(Boolean).join(" ");
 
   function handleClick(event: MouseEvent<HTMLButtonElement>) {
@@ -52,8 +59,8 @@ export function ThemeToggle({
       ref={ref}
       type="button"
       className={classes}
-      data-mazey-ui-theme={theme}
-      aria-label={accessibleLabels[theme]}
+      data-mazey-ui-theme={resolvedTheme}
+      aria-label={accessibleLabels[resolvedTheme]}
       aria-pressed={undefined}
       onClick={handleClick}
     >
@@ -67,7 +74,7 @@ export function ThemeToggle({
         aria-hidden="true"
         focusable="false"
       >
-        {iconPaths[theme].map((path) => <path key={path} d={path} />)}
+        {iconPaths[resolvedTheme].map((path) => <path key={path} d={path} />)}
       </svg>
     </button>
   );
