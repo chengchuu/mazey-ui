@@ -570,7 +570,7 @@ The component and website use:
 mazey
 ```
 
-as a runtime dependency at `^5.9.1`. The package component uses only `getSystemTheme` for its read-only initial fallback. URL/storage preference resolution, persistence, and document updates remain application-owned.
+as a runtime dependency. The package component uses only `getSystemTheme` for its read-only initial fallback. URL/storage preference resolution, persistence, and document updates remain application-owned.
 
 Externalize Mazey alongside React in ESM, CommonJS, and declaration outputs. Bundle the used OS reader into the `MAZEY_UI` IIFE without a separate Mazey global; keep React and ReactDOM external.
 
