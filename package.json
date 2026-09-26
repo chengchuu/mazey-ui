@@ -1,6 +1,6 @@
 {
   "name": "mazey-ui",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Small, accessible React UI components.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -65,7 +65,7 @@
   },
   "homepage": "https://chengchuu.github.io/mazey-ui/",
   "dependencies": {
-    "mazey": "^5.9.1",
+    "mazey": "^5.10.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
