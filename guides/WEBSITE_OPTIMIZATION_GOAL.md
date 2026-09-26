@@ -163,10 +163,9 @@ display mode, theme colors, and the supplied install icons.
   obsolete `mazey-ui` caches, and retain offline fallbacks.
 - Show install controls on Home and Playground only after `beforeinstallprompt`. Hide them in
   standalone mode and provide accessible status or unsupported-browser guidance.
-- Show an update notice and explicit update action on Home, Playground, and API pages. Activate a
-  waiting worker only after that action, then reload once on `controllerchange`.
-- Reuse `isSafePWAEnv`, `isStandalonePWA`, and `watchServiceWorkerUpdates` from `mazey` after
-  verifying their installed contracts.
+- Let updated workers activate through the browser's normal lifecycle without an in-page notice,
+  forced activation, or automatic reload.
+- Reuse `isSafePWAEnv` and `isStandalonePWA` from `mazey` after verifying their installed contracts.
 
 ## GitHub Actions result
 
