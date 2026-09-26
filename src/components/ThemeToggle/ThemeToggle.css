@@ -1,0 +1,57 @@
+.mazey-ui-theme-toggle {
+  --mazey-ui-theme-toggle-primary: var(--mazey-ui-primary, #4d8ffb);
+  --mazey-ui-theme-toggle-on-primary: var(--mazey-ui-on-primary, #141414);
+  --mazey-ui-theme-toggle-surface: var(--mazey-ui-surface, #ffffff);
+  --mazey-ui-theme-toggle-heading: var(--mazey-ui-heading, #2d2d2d);
+  --mazey-ui-theme-toggle-body: var(--mazey-ui-body, #626262);
+  --mazey-ui-theme-toggle-field: var(--mazey-ui-field, #ebebeb);
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--mazey-ui-theme-toggle-field);
+  border-radius: 50%;
+  color: var(--mazey-ui-theme-toggle-body);
+  background: var(--mazey-ui-theme-toggle-surface);
+  cursor: pointer;
+}
+
+.mazey-ui-theme-toggle[data-mazey-ui-theme="dark"] {
+  --mazey-ui-theme-toggle-primary: var(--mazey-ui-primary, #5089e8);
+  --mazey-ui-theme-toggle-surface: var(--mazey-ui-surface, #141414);
+  --mazey-ui-theme-toggle-heading: var(--mazey-ui-heading, #d6d6d6);
+  --mazey-ui-theme-toggle-body: var(--mazey-ui-body, #a5a5a5);
+  --mazey-ui-theme-toggle-field: var(--mazey-ui-field, #272727);
+}
+
+.mazey-ui-theme-toggle:hover:not(:disabled) {
+  color: var(--mazey-ui-theme-toggle-heading);
+  background: var(--mazey-ui-theme-toggle-field);
+}
+
+.mazey-ui-theme-toggle:active:not(:disabled) {
+  color: var(--mazey-ui-theme-toggle-on-primary);
+  background: var(--mazey-ui-theme-toggle-primary);
+  border-color: var(--mazey-ui-theme-toggle-primary);
+}
+
+.mazey-ui-theme-toggle:focus-visible {
+  outline: 2px solid var(--mazey-ui-theme-toggle-primary);
+  outline-offset: 2px;
+}
+
+.mazey-ui-theme-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.mazey-ui-theme-toggle__icon {
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}

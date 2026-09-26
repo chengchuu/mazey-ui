@@ -1,87 +1,63 @@
-name: Publish npm Packages
-
-env:
-  NODE_VERSION: '20'
-  PROJECT_NAME: 'mazey-ui'
+name: Validate and publish npm package
 
 on:
+  pull_request:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
-      - 'release/v*'
+      - "release/v*"
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  test:
+  validate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build package
-        run: npm run build --if-present
-
-      - name: Run tests
-        run: npm test
+          node-version: 22
+          package-manager-cache: false
+      - run: npm install
+      - run: npm run preview
 
   publish:
-    needs: test
+    needs: validate
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/release/v')
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    environment: npm
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: 'https://registry.npmjs.org/'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Build package
-        run: npm run build --if-present
-
+          node-version: 22
+          package-manager-cache: false
+          registry-url: "https://registry.npmjs.org/"
+      - run: npm install
+      - name: Read package identity
+        id: package
+        run: node --input-type=commonjs -p '"spec=" + require("./package.json").name + "@" + require("./package.json").version' >> "$GITHUB_OUTPUT"
+      - name: Require an unpublished package version
+        run: |
+          set +e
+          output=$(npm view "${{ steps.package.outputs.spec }}" version --registry=https://registry.npmjs.org/ 2>&1)
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "${{ steps.package.outputs.spec }} is already published."
+            exit 1
+          fi
+          if ! echo "$output" | grep -q "E404"; then
+            echo "$output"
+            exit "$status"
+          fi
+      - run: npm run build:package
       - name: Publish to npm
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public
-
-      - name: Configure .npmrc for GitHub Packages
-        run: |
-          echo "@${{ github.actor }}:registry=https://npm.pkg.github.com/" > .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> .npmrc
-
-      - name: Publish to GitHub Packages
-        if: success() # Only if previous steps succeed
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node scripts/change-package-name.js "@${{ github.actor }}/${{ env.PROJECT_NAME }}"
-          npm publish --registry=https://npm.pkg.github.com/
-
-      - name: Restore modified files
-        if: always() # Always run this step
-        run: git checkout -- package.json .npmrc
-
-      - name: Create git tag for version
-        if: success() # Only if previous steps succeed
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "v$VERSION" -m "Release v$VERSION"
-          git push origin "v$VERSION"
