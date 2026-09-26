@@ -34,7 +34,7 @@ change:
   `dist/index.cjs`, `dist/index.d.ts`, and `dist/styles.css`.
 - Add source maps and a browser IIFE bundle at `dist/mazey-ui.min.js` with the browser global
   `MAZEY_UI`.
-- Keep Mazey, React, ReactDOM, and the React JSX runtime external in ESM and CommonJS outputs. Externalize Mazey in declarations and declare it as a runtime dependency at `^5.9.1`. Bundle the used Mazey OS reader into the IIFE without requiring a Mazey global. Keep React
+- Keep Mazey, React, ReactDOM, and the React JSX runtime external in ESM and CommonJS outputs. Externalize Mazey in declarations and declare it as a runtime dependency. Bundle the used Mazey OS reader into the IIFE without requiring a Mazey global. Keep React
   peers external in the IIFE and bundle only the production JSX runtime needed by that output.
 - Add `unpkg` and `jsdelivr` package metadata that points to the validated browser bundle.
 - Generate CSS through the owning build stage instead of maintaining duplicate output by hand.
