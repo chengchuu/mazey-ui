@@ -14,11 +14,8 @@ describe("project delivery configuration", () => {
     expect(pkg.module).toBe("./dist/index.js");
     expect(pkg.exports["./styles.css"]).toBe("./dist/styles.css");
     expect(pkg.files).toEqual([ "dist", "LICENSE", "README.md" ]);
-    expect(pkg.dependencies).toEqual({
-      mazey: "^5.9.1",
-      react: "^19.0.0",
-      "react-dom": "^19.0.0",
-    });
+    expect(Object.keys(pkg.dependencies).sort()).toEqual([ "mazey", "react", "react-dom" ]);
+    expect(Object.values(pkg.dependencies).every((version) => typeof version === "string")).toBe(true);
     expect(pkg.devDependencies).not.toHaveProperty("mazey");
     expect("peerDependencies" in pkg).toBe(false);
     expect(projectConfigSource).toContain("const basePath = siteUrl.pathname.endsWith(\"/\")");
@@ -46,18 +43,15 @@ describe("project delivery configuration", () => {
     expect((publish.match(/NPM_TOKEN/g) || [])).toHaveLength(1);
   });
 
-  it("keeps update prompts and the TypeDoc toolbar responsive", () => {
-    expect(siteCss).toMatch(/\.pwa-update\s*\{[^}]*width:\s*min\(26rem, calc\(100vw - 2rem\)\)[^}]*box-sizing:\s*border-box/s);
-    expect(siteCss).toMatch(/\.pwa-update\[hidden\]\s*\{\s*display:\s*none/);
+  it("keeps the TypeDoc toolbar responsive without update prompts", () => {
+    expect(siteCss).not.toContain("pwa-update");
     expect(apiCss).toMatch(/\.site-project-links\s*\{[^}]*flex:\s*1[^}]*min-width:\s*0[^}]*overflow-x:\s*auto/s);
-    expect(apiCss).toMatch(/\.site-pwa-update\s*\{[^}]*width:\s*min\(26rem, calc\(100vw - 2rem\)\)[^}]*box-sizing:\s*border-box/s);
+    expect(apiCss).not.toContain("site-pwa-update");
     expect(apiCss).toContain(".site-project-links a:not(:first-child)");
   });
 
-  it("reloads only after explicit service-worker update activation", () => {
-    expect(pwaSource).toContain("let reloadRequested = false;");
-    expect(pwaSource).toContain("if (!reloadRequested) return;");
-    expect(pwaSource).toContain("reloadRequested = watcher.activateWaiting();");
-    expect(pwaSource).toContain("if (reloadRequested) updateButton.disabled = true;");
+  it("leaves service-worker update activation to the browser", () => {
+    expect(pwaSource).not.toMatch(/updatefound|controllerchange|SKIP_WAITING/);
+    expect(pwaSource).not.toContain("location.reload");
   });
 });

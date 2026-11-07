@@ -54,8 +54,6 @@ function transformApi(html, relative) {
   if (titleLinks.length !== 1) throw new Error(`Expected one TypeDoc toolbar title in ${relative}`);
   const nav = `<nav class="site-project-links" aria-label="Project links"><a href="${projectConfig.urls.site}">Home</a><a href="${new URL("playground/", projectConfig.urls.site).href}">Playground</a><a href="${new URL("api/", projectConfig.urls.site).href}">API</a><a href="${projectConfig.urls.github}">GitHub</a><a href="${projectConfig.urls.npm}">npm</a>${themeToggle()}</nav>`;
   output = output.replace(titleLinks[0][0], `${titleLinks[0][0]}${nav}`);
-  const update = "<aside class=\"site-pwa-update\" aria-label=\"Website update\" data-pwa-update hidden><span>A new website version is available.</span><button class=\"btn btn-sm btn-primary\" type=\"button\" data-pwa-update-now>Update now</button></aside>";
-  output = output.replace("</body>", `${update}</body>`);
   let primaryHeadingSeen = false;
   return output.replace(/<h1(\b[^>]*)>([\s\S]*?)<\/h1>/gi, (_heading, attributes, content) => {
     if (!primaryHeadingSeen) {

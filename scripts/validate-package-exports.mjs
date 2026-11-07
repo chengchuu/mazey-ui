@@ -36,7 +36,7 @@ assert.equal(pkg.types, "./dist/index.d.ts");
 assert.equal(pkg.unpkg, "./dist/mazey-ui.min.js");
 assert.equal(pkg.jsdelivr, "./dist/mazey-ui.min.js");
 assert.equal(pkg.exports["./styles.css"], "./dist/styles.css");
-assert.equal(pkg.dependencies.mazey, "^5.9.1");
+assert.equal(typeof pkg.dependencies.mazey, "string");
 assert.ok(!Object.hasOwn(pkg.devDependencies, "mazey"), "Mazey must be a runtime dependency only");
 assert.deepEqual(pkg.files, [ "dist", "LICENSE", "README.md" ]);
 

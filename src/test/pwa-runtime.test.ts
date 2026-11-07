@@ -9,12 +9,10 @@ import { waitFor } from "@testing-library/react";
 
 const isSafePWAEnv = vi.fn();
 const isStandalonePWA = vi.fn();
-const watchServiceWorkerUpdates = vi.fn();
 
 vi.mock("mazey", () => ({
   isSafePWAEnv,
   isStandalonePWA,
-  watchServiceWorkerUpdates,
 }));
 
 const runtimeConfig = {
@@ -53,5 +51,33 @@ describe("website PWA runtime", () => {
     await waitFor(() => expect(prompt).toHaveBeenCalledOnce());
     await waitFor(() => expect(document.querySelector("[data-pwa-status]")).toHaveTextContent("The browser could not open the installation prompt."));
     expect(button).toHaveAttribute("hidden");
+  });
+
+  it("registers without attaching update lifecycle listeners", async () => {
+    const registrationAddEventListener = vi.fn();
+    const postMessage = vi.fn();
+    const serviceWorkerAddEventListener = vi.fn();
+    const register = vi.fn().mockResolvedValue({
+      addEventListener: registrationAddEventListener,
+      waiting: { postMessage },
+    });
+    Object.defineProperty(navigator, "serviceWorker", {
+      configurable: true,
+      value: { addEventListener: serviceWorkerAddEventListener, register },
+    });
+    vi.stubGlobal("__SITE_RUNTIME_CONFIG__", {
+      ...runtimeConfig,
+      pwa: { ...runtimeConfig.pwa, enabled: true },
+    });
+    isSafePWAEnv.mockReturnValue(true);
+    const { initializePwa } = await import("../../site/pwa");
+
+    initializePwa();
+    window.dispatchEvent(new Event("load"));
+
+    await waitFor(() => expect(register).toHaveBeenCalledOnce());
+    expect(registrationAddEventListener).not.toHaveBeenCalled();
+    expect(serviceWorkerAddEventListener).not.toHaveBeenCalled();
+    expect(postMessage).not.toHaveBeenCalled();
   });
 });

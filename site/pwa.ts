@@ -1,7 +1,6 @@
 import {
   isSafePWAEnv,
   isStandalonePWA,
-  watchServiceWorkerUpdates,
 } from "mazey";
 import { runtimeConfig } from "./runtime-config";
 
@@ -13,8 +12,6 @@ interface InstallPromptEvent extends Event {
 export function initializePwa() {
   const installButton = document.querySelector<HTMLButtonElement>("[data-pwa-install]");
   const status = document.querySelector<HTMLElement>("[data-pwa-status]");
-  const update = document.querySelector<HTMLElement>("[data-pwa-update]");
-  const updateButton = document.querySelector<HTMLButtonElement>("[data-pwa-update-now]");
   let installPrompt: InstallPromptEvent | null = null;
 
   if (installButton && isStandalonePWA()) installButton.hidden = true;
@@ -43,24 +40,8 @@ export function initializePwa() {
   window.addEventListener("load", () => {
     const register = async () => {
       try {
-        const registration = await navigator.serviceWorker.register(runtimeConfig.pwa.serviceWorkerUrl, {
+        await navigator.serviceWorker.register(runtimeConfig.pwa.serviceWorkerUrl, {
           scope: runtimeConfig.pwa.scope,
-        });
-        let reloadRequested = false;
-        const watcher = watchServiceWorkerUpdates(registration, navigator.serviceWorker, {
-          onUpdateAvailable() {
-            if (update) update.hidden = false;
-          },
-          onControllerChange() {
-            if (!reloadRequested) return;
-            reloadRequested = false;
-            if (update) update.hidden = true;
-            window.location.reload();
-          },
-        });
-        updateButton?.addEventListener("click", () => {
-          reloadRequested = watcher.activateWaiting();
-          if (reloadRequested) updateButton.disabled = true;
         });
       } catch {
         if (status) status.textContent = "Offline support is unavailable in this browser or context.";
