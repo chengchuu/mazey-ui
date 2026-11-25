@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: 22
           package-manager-cache: false
+      - run: npm install --global npm@11.6.0
       - run: npm install
       - run: npm run preview
 
@@ -38,6 +39,7 @@ jobs:
           node-version: 22
           package-manager-cache: false
           registry-url: "https://registry.npmjs.org/"
+      - run: npm install --global npm@11.6.0
       - run: npm install
       - name: Read package identity
         id: package

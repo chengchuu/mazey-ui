@@ -34,7 +34,7 @@ change:
   `dist/index.cjs`, `dist/index.d.ts`, and `dist/styles.css`.
 - Add source maps and a browser IIFE bundle at `dist/mazey-ui.min.js` with the browser global
   `MAZEY_UI`.
-- Keep Mazey, React, ReactDOM, and the React JSX runtime external in ESM and CommonJS outputs. Externalize Mazey in declarations and declare it as a runtime dependency at `^5.9.1`. Bundle the used Mazey OS reader into the IIFE without requiring a Mazey global. Keep React
+- Keep Mazey, React, ReactDOM, and the React JSX runtime external in ESM and CommonJS outputs. Externalize Mazey in declarations and declare it as a runtime dependency. Bundle the used Mazey OS reader into the IIFE without requiring a Mazey global. Keep React
   peers external in the IIFE and bundle only the production JSX runtime needed by that output.
 - Add `unpkg` and `jsdelivr` package metadata that points to the validated browser bundle.
 - Generate CSS through the owning build stage instead of maintaining duplicate output by hand.
@@ -163,10 +163,9 @@ display mode, theme colors, and the supplied install icons.
   obsolete `mazey-ui` caches, and retain offline fallbacks.
 - Show install controls on Home and Playground only after `beforeinstallprompt`. Hide them in
   standalone mode and provide accessible status or unsupported-browser guidance.
-- Show an update notice and explicit update action on Home, Playground, and API pages. Activate a
-  waiting worker only after that action, then reload once on `controllerchange`.
-- Reuse `isSafePWAEnv`, `isStandalonePWA`, and `watchServiceWorkerUpdates` from `mazey` after
-  verifying their installed contracts.
+- Let updated workers activate through the browser's normal lifecycle without an in-page notice,
+  forced activation, or automatic reload.
+- Reuse `isSafePWAEnv` and `isStandalonePWA` from `mazey` after verifying their installed contracts.
 
 ## GitHub Actions result
 
